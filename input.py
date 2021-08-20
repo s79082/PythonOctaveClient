@@ -1,5 +1,7 @@
 import tkinter as tk
 
+from matplotlib.pyplot import show
+
 
 def INCREMENT(x): return x + 1
 def DECREMENT(x): return x - 1
@@ -8,6 +10,7 @@ def DECREMENT(x): return x - 1
 class ValueInputGroup:
     def __init__(self, root, txt, draw_action, r, start_value="15e-3"):
 
+        self.row = r
         # draw action is called after a button is pressed
         self.draw_action = draw_action
         self.text = tk.Label(root, text=txt, height=1, width=20)
@@ -60,3 +63,16 @@ class ValueInputGroup:
     # returns the content of the value field
     def getValue(self):
         return self.value.get("1.0", tk.END)
+
+    def show(self):
+        self.text.grid(row=self.row, column=0)
+        self.dec.grid(row=self.row, column=1)
+        self.inc.grid(row=self.row, column=2)
+        self.value.grid(row=self.row, column=3)
+
+    def hide(self):
+        self.text.grid_forget()
+        self.dec.grid_forget()
+        self.inc.grid_forget()
+        self.value.grid_forget()
+        

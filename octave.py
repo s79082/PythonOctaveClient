@@ -49,6 +49,7 @@ class OctaveModel:
         if self.current < self.size:
             return self.scripts[self.current]
         else:
+            self.current = -1
             raise StopIteration
 
 
