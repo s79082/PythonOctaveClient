@@ -1,7 +1,5 @@
 import tkinter as tk
-
-from matplotlib.pyplot import show
-
+from unit_conversion import UNITS
 
 def INCREMENT(x): return x + 1
 def DECREMENT(x): return x - 1
@@ -30,6 +28,12 @@ class ValueInputGroup:
         # mock start value
         self.value.insert(tk.END, start_value)
         self.value.grid(row=r, column=3)
+
+        #self.unit = tk.StringVar(master=root, value="mm")
+        #self.unit_menu = tk.OptionMenu(root, self.unit, *UNITS)
+        #self.unit_menu.grid(row=r, column=4)
+
+
 
     def __bool__(self):
         return self.getValue() != ""
@@ -61,8 +65,13 @@ class ValueInputGroup:
         return action
 
     # returns the content of the value field
-    def getValue(self):
+    def getValue(self) -> str:
         return self.value.get("1.0", tk.END)
+
+    # return the value normalized with the selected unit
+    def getNormalizedValue(self) -> str:
+        return self.getValue()
+
 
     def show(self):
         self.text.grid(row=self.row, column=0)
@@ -75,4 +84,20 @@ class ValueInputGroup:
         self.dec.grid_forget()
         self.inc.grid_forget()
         self.value.grid_forget()
-        
+
+
+class UnitValueInputGroup(ValueInputGroup):
+
+    def __init__(self, root, txt, draw_action, r, start_value="15e-3"):
+        super().__init__(root, txt, draw_action, r, start_value=start_value)
+
+        self.unit = tk.StringVar(master=root, value="mm")
+        self.unit_menu = tk.OptionMenu(root, self.unit, *UNITS)
+        self.unit_menu.grid(row=r, column=4)
+
+    def getNormalizedValue(self) -> str:
+        val = float(self.getValue())
+        val *= pow(10, UNITS[self.unit.get()])
+        val = str(val)
+        return val
+

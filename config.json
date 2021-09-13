@@ -1,3 +1,15 @@
 {
-    "script_path": "C:\\Users\\morit\\Desktop\\OcatveClient\\OctaveClient\\src"
+    "script_path": "C:\\Users\\morit\\Downloads\\Modelle",
+    "models": [
+        "alpha_gap_JCA", 
+        "alpha_gap_JCAL", 
+        "alpha_gap_JCAPL", 
+        "alpha_gap_stinson", 
+        "alpha_gap_biot", 
+        "alpha_nogap_JCA", 
+        "alpha_nogap_JCAL", 
+        "alpha_nogap_JCAPL", 
+        "alpha_nogap_stinson", 
+        "alpha_nogap_biot"
+    ]
 }
