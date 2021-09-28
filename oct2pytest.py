@@ -37,7 +37,7 @@ o.addpath(script_path)
 
 # setup x axis
 x = range(OUTPUT_LEN)
-
+x = range(20, 6300, 50)
 o.eval("run('gegenueberstellung.m')", verbose=False)
 
 
@@ -53,6 +53,9 @@ cb_vars = list(zip(models, vars))
 
 def draw_plot():
 
+    # calculate frequency for xaxis
+    x = calc_xaxis()
+
     # get input
     params = []
     plt.clf()
@@ -63,19 +66,25 @@ def draw_plot():
         #params.append(str(i.getValue()))
         params.append(i.getNormalizedValue())
 
+    # append frequency params
+    params.append(tb_freq_start.get())
+    params.append(tb_freq_end.get())
+    params.append(tb_freq_step.get())
+
+
     #params = list(map(lambda x: str(x), params))
 
-    cmd = "geg({0}, {1}, {2}, {3})".format(*params)
+    cmd = "geg({0}, {1}, {2}, {3}, {4}, {5}, {6})".format(*params)
     a = o.eval(cmd, verbose=False, nout=10)
-
     for i, ret in enumerate(a):
 
         if cb_vars[i][1].get():
-            plt.plot(ret[0], label=models[i])
-
+            plt.plot(x, ret[0], label=models[i])
+    #plt.xticks(x, x)
+    #plt.xlim((20, 6300))
 
     if loaded_values and var_draw_loaded_values.get():
-        plt.plot(loaded_values, label=loaded_filename.split("/")[-1])
+        plt.plot(x,loaded_values, label=loaded_filename.split("/")[-1])
 
     #plt.plot(load_values_from_file("test.txt"))
     #for f in model:
@@ -117,7 +126,6 @@ def load_and_draw():
     try:
         loaded_filename = tk.filedialog.askopenfilename()
         loaded_values = load_values_from_file(loaded_filename)
-        print(loaded_filename)
         label_loaded_filename["text"] = loaded_filename.split("/")[-1]
             #label_loaded_filename.text = loaded_filename.split("/")[-1]
     except Exception:
@@ -129,13 +137,33 @@ def load_and_draw():
 
     #return load_and_draw
 
-
 len_value_inputs = len(value_inputs)
 # calc button
 tk.Button(window, text="berechnen", command=draw_plot).grid(row=len_value_inputs)
 row_loaded = len_value_inputs + 1
 tk.Button(window, text="load values", command=load_and_draw).grid(row=row_loaded)
-tk.Checkbutton(window, variable=var_draw_loaded_values).grid(row=row_loaded, column=2)
+tk.Checkbutton(window, variable=var_draw_loaded_values, command=draw_plot).grid(row=row_loaded, column=2)
+
+def calc_xaxis():
+    #global x
+    start = int(tb_freq_start.get())
+    step =  int(tb_freq_step.get())
+    end = int(tb_freq_end.get())
+    x = range(start, end, step)
+    #print(list(x)[-1])
+    return x
+    
+
+tb_freq_start = tk.Entry(window)
+tb_freq_start.insert(tk.END, "20")
+tb_freq_start.grid()
+tb_freq_step = tk.Entry(window)
+tb_freq_step.insert(tk.END, "50")
+tb_freq_step.grid()
+var_freq_end = tk.StringVar()
+tb_freq_end = tk.Entry(window, textvariable=var_freq_end)
+tb_freq_end.insert(tk.END, "6300") 
+tb_freq_end.grid()
 
 
 
